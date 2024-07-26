@@ -7,7 +7,7 @@ def content_file_name(instance, filename):
 # Create your models here.
 class Product(models.Model):
     title = models.CharField(max_length=100)
-    image = models.ImageField(upload_to=content_file_name)
+    #image = models.ImageField(upload_to=content_file_name)
     description = models.TextField()
     price = models.DecimalField(decimal_places=2, max_digits=10)
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name="products")
