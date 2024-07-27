@@ -1,0 +1,15 @@
+.nav-bar {
+    background-color: whitesmoke;
+    padding: 5px;
+}
+
+.nav-button {
+    padding: 10px;
+    margin: 20px 0;
+    background-color: whitesmoke;
+    color: slategrey;
+    border: 1px solid lightgray;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}

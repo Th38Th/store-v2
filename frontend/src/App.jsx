@@ -5,6 +5,7 @@ import Register from "./pages/Register"
 import NotFound from "./pages/NotFound"
 import Home from "./pages/Home"
 import ProtectedRoute from "./components/ProtectedRoute"
+import NavigationBar from "./components/NavigationBar"
 
 function Logout(){
   localStorage.clear();
@@ -18,19 +19,20 @@ function RegisterAndLogout(){
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/"
-        element={
-          <ProtectedRoute>
-            <Home/>
-          </ProtectedRoute>
-        }/>
-        <Route path="/login" element={<Login/>}/>
-        <Route path="/register" element={<RegisterAndLogout/>}/>
-        <Route path="*" element={<NotFound/>}/>
-      </Routes>
-    </BrowserRouter>
+      <BrowserRouter>
+        <NavigationBar/>
+        <Routes>
+          <Route path="/"
+          element={
+            <ProtectedRoute>
+              <Home/>
+            </ProtectedRoute>
+          }/>
+          <Route path="/login" element={<Login/>}/>
+          <Route path="/register" element={<RegisterAndLogout/>}/>
+          <Route path="*" element={<NotFound/>}/>
+        </Routes>
+      </BrowserRouter>
   )
 }
 

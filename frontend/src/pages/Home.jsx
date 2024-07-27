@@ -1,7 +1,7 @@
 import {useState, useEffect} from "react"
 import Product from "../components/Product";
 import "../styles/Home.css"
-import api from "../api"
+import { api } from "../api"
 import LoadingIndicator from "../components/LoadingIndicator";
 
 function Home() {
