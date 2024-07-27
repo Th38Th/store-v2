@@ -1,49 +1,18 @@
 import { Navigate } from "react-router-dom"
 import { jwtDecode } from "jwt-decode"
-import { api, tokenManager } from "../api"
+import api from "../api"
 import { REFRESH_TOKEN, ACCESS_TOKEN } from "../constants"
 import { useState, useEffect } from "react"
+import { useAuth } from "./AuthProvider"
 
 function ProtectedRoute({children}){
+    const { auth } = useAuth();
     const [isAuthorized, setIsAuthorized] = useState(null);
 
     useEffect(() => {
-        auth().catch(() => setIsAuthorized(false));
+        auth().then((res) => setIsAuthorized(res))
+        .catch(() => setIsAuthorized(false));
     }, []);
-
-    const refreshToken = async () => {
-        const refreshToken = tokenManager.getToken(REFRESH_TOKEN);
-        try {
-            const res = await api.post("/api/token/refresh/", {
-                refresh: refreshToken,
-            });
-            if (res.status === 200) {
-                tokenManager.setToken(ACCESS_TOKEN, res.data.access);
-                setIsAuthorized(true);
-            } else {
-                setIsAuthorized(false);
-            }
-        } catch(error) {
-            setIsAuthorized(false);
-        }
-    }
-
-    const auth = async() => {
-        const token = tokenManager.getToken(ACCESS_TOKEN);
-        if (!token) {
-            setIsAuthorized(false);
-            return;
-        }
-        const decoded = jwtDecode(token);
-        const tokenExpiration = decoded.exp;
-        const now = Date.now() / 1000;
-
-        if (tokenExpiration < now){
-            await refreshToken();
-        } else {
-            setIsAuthorized(true);
-        }
-    }
     
     if (isAuthorized === null){
         return <div>Loading...</div>

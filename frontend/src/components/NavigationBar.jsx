@@ -1,14 +1,13 @@
 import React from "react"
-import { tokenManager } from "../api"
+import { useAuth } from "./AuthProvider";
 import "../styles/NavigationBar.css"
 
 function NavigationBar() {
+    const {isLoggedIn, logout} = useAuth();
+
     return (<nav className="nav-bar">
-        {tokenManager.isLoggedIn() && <button className="nav-button"
-        onClick={()=>{
-            tokenManager.clearAll();
-            window.location.reload();
-            }}>LOGOUT</button>}
+        {isLoggedIn && <button className="nav-button"
+        onClick={logout}>LOGOUT</button>}
     </nav>)
 }
 

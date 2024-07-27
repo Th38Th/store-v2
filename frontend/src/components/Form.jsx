@@ -1,12 +1,14 @@
 import { useState } from "react"
-import { api, tokenManager }  from "../api"
+import api from "../api"
 import { useNavigate } from "react-router-dom"
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants"
 import "../styles/Form.css"
 import LoadingIndicator from "./LoadingIndicator"
 import Checkbox from "./Checkbox"
+import { useAuth } from "./AuthProvider"
 
-function Form({route, method}) {
+function Form({method}) {
+    const { login, register } = useAuth();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [keepLoggedIn, setKeepLoggedIn] = useState(false);
@@ -20,15 +22,13 @@ function Form({route, method}) {
         e.preventDefault();
 
         try {
-            const res = await api.post(route, {username, password});
             if (method === "login") {
-                console.log(keepLoggedIn);
-                tokenManager.setKeepLoggedIn(keepLoggedIn);
-                tokenManager.setToken(ACCESS_TOKEN, res.data.access);
-                tokenManager.setToken(REFRESH_TOKEN, res.data.refresh);
-                navigate("/");
+                console.log({username, password, keepLoggedIn});
+                login({username, password, keepLoggedIn})
+                .then(()=>navigate("/"));
             } else {
-                navigate("/login");
+                register({username, password})
+                .then(()=>navigate("/login"));
             }
         } catch(error) {
             alert(error);
