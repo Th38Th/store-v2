@@ -7,7 +7,12 @@ function NavigationBar() {
     const {isLoggedIn, logout} = useAuth();
 
     return (<nav className="nav-bar">
-        <UserPanel/>
+        <div className="nav-main-area">
+
+        </div>
+        <div className="flex-reversed">
+            <UserPanel/>
+        </div>
     </nav>)
 }
 

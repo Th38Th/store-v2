@@ -7,7 +7,7 @@ import LoadingIndicator from "./LoadingIndicator"
 import Checkbox from "./Checkbox"
 import { useAuth } from "./AuthProvider"
 
-function Form({method}) {
+function Form({method, showTitle}) {
     const { login, register } = useAuth();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -38,7 +38,7 @@ function Form({method}) {
     }
 
     return <form onSubmit={handleSubmit} className="form-container">
-        <h1>{name}</h1>
+        {showTitle && <h1>{name}</h1>}
         <input 
             className="form-input" 
             type="text" value={username}

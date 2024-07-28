@@ -1,6 +1,6 @@
-import React, { createContext, useState, useContext } from 'react';
-import { ACCESS_TOKEN, KEEP_LOGGED_IN, REFRESH_TOKEN } from '../constants';
-import tokenManager from '../tokenManager';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { ACCESS_TOKEN, KEEP_LOGGED_IN, REFRESH_TOKEN, USER_NAME } from '../constants';
+import authDataManager from '../authDataManager';
 import api from "../api"
 
 // Create a context with default value of null
@@ -8,15 +8,16 @@ const AuthContext = createContext(null);
 
 // Create a provider component
 export const AuthProvider = ({ children }) => {
-  const [username, setUsername] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [keepLoggedIn, setKeepLoggedIn] = useState(false);
+  const [keepLoggedIn, setKeepLoggedIn] = useState(authDataManager.getToken(KEEP_LOGGED_IN));
+  const [username, setUsername] = useState(authDataManager.getToken(USER_NAME));
+  const [isLoggedIn, setIsLoggedIn] = useState(authDataManager.isLoggedIn());
 
     const login = async ({username, password, keepLoggedIn}) => {
         const res = await api.post("/api/token/", {username, password});
-        tokenManager.setToken(KEEP_LOGGED_IN, keepLoggedIn);
-        tokenManager.setToken(ACCESS_TOKEN, res.data.access);
-        tokenManager.setToken(REFRESH_TOKEN, res.data.refresh);
+        authDataManager.setToken(USER_NAME, username);
+        authDataManager.setToken(KEEP_LOGGED_IN, keepLoggedIn);
+        authDataManager.setToken(ACCESS_TOKEN, res.data.access);
+        authDataManager.setToken(REFRESH_TOKEN, res.data.refresh);
         setIsLoggedIn(true);
         setUsername(username);
     };
@@ -26,13 +27,13 @@ export const AuthProvider = ({ children }) => {
     };
 
     const refreshToken = async () => {
-        const refreshToken = tokenManager.getToken(REFRESH_TOKEN);
+        const refreshToken = authDataManager.getToken(REFRESH_TOKEN);
         try {
             const res = await api.post("/api/token/refresh/", {
                 refresh: refreshToken,
             });
             if (res.status === 200) {
-                tokenManager.setToken(ACCESS_TOKEN, res.data.access);
+                authDataManager.setToken(ACCESS_TOKEN, res.data.access);
                 return true;
             } else {
                 return false;
@@ -43,7 +44,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     const auth = async() => {
-        const token = tokenManager.getToken(ACCESS_TOKEN);
+        const token = authDataManager.getToken(ACCESS_TOKEN);
         console.log(localStorage);
 
         if (!token) {return false;}
@@ -60,8 +61,8 @@ export const AuthProvider = ({ children }) => {
     }
 
     const logout = () => {
-        tokenManager.clearToken(ACCESS_TOKEN);
-        tokenManager.clearToken(REFRESH_TOKEN);
+        authDataManager.clearToken(ACCESS_TOKEN);
+        authDataManager.clearToken(REFRESH_TOKEN);
         setIsLoggedIn(false);
         setUsername(null);
     };
