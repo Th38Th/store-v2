@@ -4,6 +4,7 @@ import api from "../api"
 import { REFRESH_TOKEN, ACCESS_TOKEN } from "../constants"
 import { useState, useEffect } from "react"
 import { useAuth } from "./AuthProvider"
+import Unauthorized from "../pages/Unauthorized"
 
 function ProtectedRoute({children}){
     const { auth } = useAuth();
@@ -18,7 +19,7 @@ function ProtectedRoute({children}){
         return <div>Loading...</div>
     }
 
-    return isAuthorized? children : <Navigate to="/login"/>
+    return isAuthorized? children : <Unauthorized login={true}/>
 }
 
 export default ProtectedRoute

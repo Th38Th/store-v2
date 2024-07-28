@@ -1,13 +1,13 @@
 import React from "react"
 import { useAuth } from "./AuthProvider";
 import "../styles/NavigationBar.css"
+import UserPanel from "./UserPanel";
 
 function NavigationBar() {
     const {isLoggedIn, logout} = useAuth();
 
     return (<nav className="nav-bar">
-        {isLoggedIn && <button className="nav-button"
-        onClick={logout}>LOGOUT</button>}
+        <UserPanel/>
     </nav>)
 }
 

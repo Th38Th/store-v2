@@ -39,7 +39,7 @@ function Home() {
 
     const createProduct = (e) => {
         e.preventDefault();
-        api.post("/api/products/", {description, title, price})
+        api.post("/api/my-products/", {description, title, price})
         .then((res) => {
             if (res.status === 201) alert("Product created!");
             else alert("Failed to create product.");

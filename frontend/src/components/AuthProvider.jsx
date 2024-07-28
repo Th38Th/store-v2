@@ -8,6 +8,7 @@ const AuthContext = createContext(null);
 
 // Create a provider component
 export const AuthProvider = ({ children }) => {
+  const [username, setUsername] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [keepLoggedIn, setKeepLoggedIn] = useState(false);
 
@@ -17,6 +18,7 @@ export const AuthProvider = ({ children }) => {
         tokenManager.setToken(ACCESS_TOKEN, res.data.access);
         tokenManager.setToken(REFRESH_TOKEN, res.data.refresh);
         setIsLoggedIn(true);
+        setUsername(username);
     };
 
     const register = async({username, password}) => {
@@ -61,10 +63,11 @@ export const AuthProvider = ({ children }) => {
         tokenManager.clearToken(ACCESS_TOKEN);
         tokenManager.clearToken(REFRESH_TOKEN);
         setIsLoggedIn(false);
+        setUsername(null);
     };
 
     return (
-      <AuthContext.Provider value={{ isLoggedIn, keepLoggedIn, setKeepLoggedIn, register, login, logout, auth }}>
+      <AuthContext.Provider value={{ isLoggedIn, keepLoggedIn, setKeepLoggedIn, register, login, logout, auth, username }}>
         {children}
       </AuthContext.Provider>
     );

@@ -51,11 +51,12 @@ function Form({method}) {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password" 
         />
+        {method == "login" &&
         <Checkbox
             label="Keep Me Logged In"
             value={keepLoggedIn}
             onChange={(e) => setKeepLoggedIn(e.target.checked)}
-        />
+        />}
         {loading && <LoadingIndicator/>}
         <button className="form-button" type="submit">
             {name}

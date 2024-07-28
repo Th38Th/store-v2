@@ -5,7 +5,15 @@ from .serializers import UserSerializer, ProductSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Product
 
-class ProductCatalogCreate(generics.ListCreateAPIView):
+
+class ProductCatalogView(generics.ListAPIView):
+    serializer_class = ProductSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        return Product.objects.all()
+
+class OwnProductsCreate(generics.ListCreateAPIView):
     serializer_class = ProductSerializer
     permission_classes = [IsAuthenticated]
 
@@ -33,3 +41,9 @@ class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
+
+class GetUserView(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
+    lookup_field = "id"
