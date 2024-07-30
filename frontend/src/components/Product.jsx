@@ -9,8 +9,7 @@ function Product({product, onDelete}){
     const [seller, setSeller] = useState({});
     
     const getSeller = async (id) => {
-        const sellerInfo = await api.get(`/api/user/get/${id}/`);
-        console.log("Got the seller", sellerInfo.data);
+        const sellerInfo = await api.get(`/user/get/${id}/`);
         return sellerInfo.data;
     }
 

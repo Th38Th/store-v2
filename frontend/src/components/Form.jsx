@@ -1,17 +1,15 @@
 import { useState } from "react"
-import api from "../api"
+import { useAuth } from "./AuthProvider"
 import { useNavigate } from "react-router-dom"
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants"
 import "../styles/Form.css"
 import LoadingIndicator from "./LoadingIndicator"
 import Checkbox from "./Checkbox"
-import { useAuth } from "./AuthProvider"
+import api from "../api"
 
 function Form({method, showTitle}) {
-    const { login, register } = useAuth();
+    const {keepLoggedIn, setKeepLoggedIn} = useAuth();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [keepLoggedIn, setKeepLoggedIn] = useState(false);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -23,11 +21,10 @@ function Form({method, showTitle}) {
 
         try {
             if (method === "login") {
-                console.log({username, password, keepLoggedIn});
-                login({username, password, keepLoggedIn})
+                api.login({username, password})
                 .then(()=>navigate("/"));
             } else {
-                register({username, password})
+                api.register({username, password})
                 .then(()=>navigate("/login"));
             }
         } catch(error) {

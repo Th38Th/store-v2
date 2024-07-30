@@ -1,13 +1,12 @@
-import React from "react"
+import { useState } from "react"
+import { useAuth } from "./AuthProvider"
 import Tabs from "@mui/material/Tabs"
 import Tab from "@mui/material/Tab"
 import Box from "@mui/material/Box"
 import Form from "../components/Form"
 import Button from "@mui/material/Button"
-import Person from "@mui/icons-material/Person"
-import PersonOutline from "@mui/icons-material/PersonOutline"
-import { useAuth } from "./AuthProvider"
-import { ButtonBase, IconButton, Popover } from "@mui/material"
+import api from "../api"
+import { Popover } from "@mui/material"
 import User from "../components/User"
 import "../styles/UserPanel.css"
 
@@ -27,12 +26,6 @@ function UserTabPanel(props) {
     );
   }
   
-  /*UserTabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.number.isRequired,
-    value: PropTypes.number.isRequired,
-  };*/
-  
   function a11yProps(index) {
     return {
       id: `simple-tab-${index}`,
@@ -41,9 +34,9 @@ function UserTabPanel(props) {
   }
   
 export default function UserPanel() {
-  const { username, isLoggedIn, logout } = useAuth();
-  const [value, setValue] = React.useState(0);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const {username, isLoggedIn} = useAuth();
+  const [value, setValue] = useState(0);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -81,7 +74,7 @@ export default function UserPanel() {
     }}>
       {isLoggedIn && 
           <Button className="nav-button"
-          onClick={logout}>LOGOUT</Button>}
+          onClick={api.logout}>LOGOUT</Button>}
         {!isLoggedIn &&
         <>
           <Tabs value={value} onChange={handleChange}>

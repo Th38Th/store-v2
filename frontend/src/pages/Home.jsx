@@ -17,19 +17,19 @@ function Home() {
 
     const getProducts = () => {
         setLoading(true);
-        api
-        .get("/api/products/")
+        api.get("/products/")
         .then((res) => res.data)
         .then((data) => {
             setProducts(data);
-            console.log(data);
         })
         .catch((err) => alert(err))
         .finally(() => setLoading(false));
     };
 
     const deleteProduct = (id) => {
-        api.delete(`/api/products/delete/${id}/`)
+        api.delete(`/products/delete/${id}/`, {},
+            {withCredentials: true}
+        )
         .then((res) => {
             if (res.status == 204) alert("Product deleted!");
             else alert("Failed to delete note.");
@@ -39,7 +39,7 @@ function Home() {
 
     const createProduct = (e) => {
         e.preventDefault();
-        api.post("/api/my-products/", {description, title, price})
+        api.post("/my-products/", {description, title, price})
         .then((res) => {
             if (res.status === 201) alert("Product created!");
             else alert("Failed to create product.");
