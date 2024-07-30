@@ -1,19 +1,26 @@
 import { useState } from "react"
-import { useAuth } from "./AuthProvider"
 import { useNavigate } from "react-router-dom"
 import "../styles/Form.css"
 import LoadingIndicator from "./LoadingIndicator"
 import Checkbox from "./Checkbox"
 import api from "../api"
+import { useDispatch, useSelector } from "react-redux"
+import { setKeepLoggedIn, setUserName, setIsLoggedIn } from "../stores/AuthSlice"
 
 function Form({method, showTitle}) {
-    const {keepLoggedIn, setKeepLoggedIn} = useAuth();
+    const dispatch = useDispatch();
+    const keepLoggedIn = useSelector((state) => state.auth.keepLoggedIn);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const name = method === "login"? "Login" : "Register";
+
+    const handleLogin = () => {
+        dispatch(setIsLoggedIn(true));
+        dispatch(setUserName(username));
+    }
     
     const handleSubmit = async (e) => {
         setLoading(true);
@@ -22,6 +29,7 @@ function Form({method, showTitle}) {
         try {
             if (method === "login") {
                 api.login({username, password})
+                .then(()=>handleLogin())
                 .then(()=>navigate("/"));
             } else {
                 api.register({username, password})
@@ -52,7 +60,7 @@ function Form({method, showTitle}) {
         <Checkbox
             label="Keep Me Logged In"
             value={keepLoggedIn}
-            onChange={(e) => setKeepLoggedIn(e.target.checked)}
+            onChange={(e) => dispatch(setKeepLoggedIn(e.target.checked))}
         />}
         {loading && <LoadingIndicator/>}
         <button className="form-button" type="submit">

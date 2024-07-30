@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { useAuth } from "./AuthProvider"
 import Tabs from "@mui/material/Tabs"
 import Tab from "@mui/material/Tab"
 import Box from "@mui/material/Box"
@@ -9,6 +8,8 @@ import api from "../api"
 import { Popover } from "@mui/material"
 import User from "../components/User"
 import "../styles/UserPanel.css"
+import { useSelector, useDispatch } from "react-redux"
+import { setIsLoggedIn, setUserName } from "../stores/AuthSlice"
 
 function UserTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -34,7 +35,10 @@ function UserTabPanel(props) {
   }
   
 export default function UserPanel() {
-  const {username, isLoggedIn} = useAuth();
+  const dispatch = useDispatch();
+  const username = useSelector((state)=>state.auth.username);
+  const isLoggedIn = useSelector((state)=>state.auth.isLoggedIn);
+
   const [value, setValue] = useState(0);
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -49,6 +53,12 @@ export default function UserPanel() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const handleLogout = () => {
+    api.logout();
+    dispatch(setIsLoggedIn(false));
+    dispatch(setUserName(false));
+  }
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
@@ -74,7 +84,7 @@ export default function UserPanel() {
     }}>
       {isLoggedIn && 
           <Button className="nav-button"
-          onClick={api.logout}>LOGOUT</Button>}
+          onClick={handleLogout}>LOGOUT</Button>}
         {!isLoggedIn &&
         <>
           <Tabs value={value} onChange={handleChange}>
